@@ -3,7 +3,7 @@ const { pool } = require('../models/db');
 // Get inventory by user ID
 const findByUserId = async (userId) => {
   const [rows] = await pool.execute(
-    `SELECT i.*, c.name, c.mana_cost, c.type_line, c.oracle_text, c.usd, c.usd_foil, c.image_url, c.set_name 
+    `SELECT i.*, i.\`condition\`, c.name, c.mana_cost, c.type_line, c.oracle_text, c.usd, c.usd_foil, c.image_url, c.set_name 
      FROM inventory i
      JOIN cards c ON i.card_id = c.id
      WHERE i.user_id = ?`,
@@ -29,10 +29,10 @@ const addCard = async (userId, cardId, cardName, setName, price) => {
     );
     return existingRows[0];
   } else {
-    // Add new card to inventory
+    // Add new card to inventory - note the backticks around `condition`
     const [result] = await pool.execute(
       `INSERT INTO inventory 
-       (user_id, card_id, card_name, set_name, price, quantity, condition, added_at) 
+       (user_id, card_id, card_name, set_name, price, quantity, \`condition\`, added_at) 
        VALUES (?, ?, ?, ?, ?, ?, ?, NOW())`,
       [
         userId,
@@ -76,7 +76,7 @@ const getSorted = async (userId, sortBy) => {
   }
 
   const [rows] = await pool.execute(
-    `SELECT i.*, c.name, c.mana_cost, c.type_line, c.oracle_text, c.usd, c.usd_foil, c.image_url, c.set_name 
+    `SELECT i.*, i.\`condition\`, c.name, c.mana_cost, c.type_line, c.oracle_text, c.usd, c.usd_foil, c.image_url, c.set_name 
      FROM inventory i
      JOIN cards c ON i.card_id = c.id
      WHERE i.user_id = ? ${orderBy}`,

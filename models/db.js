@@ -85,7 +85,7 @@ const initDatabase = async () => {
       )
     `);
 
-    // Create inventory table if not exists
+    // Create inventory table if not exists - Note: 'condition' is escaped with backticks
     await pool.execute(`
       CREATE TABLE IF NOT EXISTS inventory (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -95,7 +95,7 @@ const initDatabase = async () => {
         set_name VARCHAR(255),
         price DECIMAL(10, 2),
         quantity INT DEFAULT 1,
-        condition VARCHAR(50) DEFAULT 'Near Mint',
+        \`condition\` VARCHAR(50) DEFAULT 'Near Mint',
         added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
         FOREIGN KEY (card_id) REFERENCES cards(id) ON DELETE CASCADE

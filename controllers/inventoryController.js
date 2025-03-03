@@ -22,9 +22,9 @@ const getInventory = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    // Get inventory cards with card details
+    // Get inventory cards with card details - note the backticks around `condition`
     const [inventoryRows] = await pool.execute(
-      `SELECT i.*, c.name, c.mana_cost, c.type_line, c.oracle_text, c.usd, c.usd_foil, c.image_url, c.set_name 
+      `SELECT i.*, i.\`condition\`, c.name, c.mana_cost, c.type_line, c.oracle_text, c.usd, c.usd_foil, c.image_url, c.set_name 
        FROM inventory i
        JOIN cards c ON i.card_id = c.id
        WHERE i.user_id = ?`,
@@ -66,7 +66,7 @@ const searchInventory = async (req, res) => {
 
     // Build query to search inventory
     let sqlQuery = `
-      SELECT i.*, c.name, c.mana_cost, c.type_line, c.oracle_text, c.usd, c.usd_foil, c.image_url, c.set_name 
+      SELECT i.*, i.\`condition\`, c.name, c.mana_cost, c.type_line, c.oracle_text, c.usd, c.usd_foil, c.image_url, c.set_name 
       FROM inventory i
       JOIN cards c ON i.card_id = c.id
       WHERE i.user_id = ?
@@ -217,9 +217,9 @@ const getSortedInventory = async (req, res) => {
     const userId = req.user.id;
     const { sortBy } = req.query;
 
-    // Get inventory cards with card details
+    // Get inventory cards with card details - note the backticks around `condition`
     const [inventoryRows] = await pool.execute(
-      `SELECT i.*, c.name, c.mana_cost, c.type_line, c.oracle_text, c.usd, c.usd_foil, c.image_url, c.set_name 
+      `SELECT i.*, i.\`condition\`, c.name, c.mana_cost, c.type_line, c.oracle_text, c.usd, c.usd_foil, c.image_url, c.set_name 
        FROM inventory i
        JOIN cards c ON i.card_id = c.id
        WHERE i.user_id = ?`,
