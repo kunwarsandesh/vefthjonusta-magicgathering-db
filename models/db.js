@@ -1,13 +1,40 @@
 const mysql = require('mysql2/promise');
 const { DB } = require('../config');
 
-// Create a connection pool
+// Function to parse database URL if it exists
+const getDatabaseConfig = () => {
+  const databaseUrl = process.env.DATABASE_URL;
+  
+  if (databaseUrl) {
+    try {
+      // Parse the URL
+      const url = new URL(databaseUrl);
+      
+      return {
+        host: url.hostname,
+        port: url.port,
+        user: url.username,
+        password: url.password,
+        database: url.pathname.substring(1) // Remove leading slash
+      };
+    } catch (error) {
+      console.error('Error parsing DATABASE_URL:', error.message);
+      console.warn('Falling back to individual environment variables');
+    }
+  }
+  
+  // Fall back to individual config values from config.js
+  return DB;
+};
+
+// Create a connection pool with parsed config
+const dbConfig = getDatabaseConfig();
 const pool = mysql.createPool({
-  host: DB.host,
-  port: DB.port,
-  user: DB.user,
-  password: DB.password,
-  database: DB.database,
+  host: dbConfig.host,
+  port: dbConfig.port,
+  user: dbConfig.user,
+  password: dbConfig.password,
+  database: dbConfig.database,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
@@ -18,10 +45,12 @@ const testConnection = async () => {
   try {
     const connection = await pool.getConnection();
     console.log('Database connection established successfully');
+    console.log(`Connected to ${dbConfig.database} at ${dbConfig.host}:${dbConfig.port}`);
     connection.release();
     return true;
   } catch (error) {
     console.error('Database connection failed:', error.message);
+    console.error(`Failed to connect to ${dbConfig.database} at ${dbConfig.host}:${dbConfig.port}`);
     return false;
   }
 };
@@ -41,9 +70,6 @@ const initDatabase = async () => {
     `);
 
     // Create cards table if not exists
-
-    // In models/db.js, update the cards table creation:
-
     await pool.execute(`
       CREATE TABLE IF NOT EXISTS cards (
         id VARCHAR(255) PRIMARY KEY,
