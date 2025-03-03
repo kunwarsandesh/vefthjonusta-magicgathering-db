@@ -37,7 +37,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Something went wrong!' });
 });
 
-// Initialize database and start server
+// Initialize database when not running on Vercel
 const startServer = async () => {
   try {
     // Test database connection
@@ -48,27 +48,37 @@ const startServer = async () => {
       await initDatabase();
       
       // Start server
-      const server = app.listen(PORT, () => {
+      app.listen(PORT, () => {
         console.log(`Magic Inventory API server running on port ${PORT}`);
         console.log(`API base URL: http://localhost:${PORT}/api`);
       });
-      
-      return server;
     } else {
       console.error('Failed to start server due to database connection issues');
       console.error('Please check your database configuration in .env file');
-      process.exit(1);
     }
   } catch (error) {
     console.error('Server initialization error:', error);
-    process.exit(1);
   }
 };
 
-// If this file is being run directly, start the server
-if (require.main === module) {
+// Check if we're running on Vercel
+if (process.env.VERCEL) {
+  // Connect to database but don't start the server (Vercel handles that)
+  (async () => {
+    try {
+      const isConnected = await testConnection();
+      if (isConnected) {
+        await initDatabase();
+        console.log('Database initialized successfully on Vercel');
+      }
+    } catch (error) {
+      console.error('Database initialization error on Vercel:', error);
+    }
+  })();
+} else {
+  // Start server normally in non-Vercel environments
   startServer();
 }
 
-// Export app for testing
+// Export the Express app for Vercel
 module.exports = app;
