@@ -1,0 +1,741 @@
+{
+	"info": {
+	  "name": "Magic Inventory API",
+	  "description": "A comprehensive API for managing Magic: The Gathering card inventories, decks, and card searches",
+	  "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+	  "_postman_id": "a2e3f5d7-b9c1-4e8f-a6d2-f8e9c0b2d4a6"
+	},
+	"variable": [
+	  {
+		"key": "base_url",
+		"value": "http://localhost:8080/api",
+		"type": "string"
+	  },
+	  {
+		"key": "token",
+		"value": "",
+		"type": "string"
+	  }
+	],
+	"item": [
+	  {
+		"name": "Authentication",
+		"description": "User registration, login and profile management",
+		"item": [
+		  {
+			"name": "Register User",
+			"request": {
+			  "method": "POST",
+			  "header": [
+				{
+				  "key": "Content-Type",
+				  "value": "application/json",
+				  "type": "text"
+				}
+			  ],
+			  "body": {
+				"mode": "raw",
+				"raw": "{\n    \"username\": \"testuser\",\n    \"password\": \"testpassword\"\n}"
+			  },
+			  "url": {
+				"raw": "{{base_url}}/users/register",
+				"host": ["{{base_url}}"],
+				"path": ["users", "register"]
+			  },
+			  "description": "Register a new user account"
+			},
+			"response": []
+		  },
+		  {
+			"name": "Login",
+			"event": [
+			  {
+				"listen": "test",
+				"script": {
+				  "exec": [
+					"var jsonData = pm.response.json();",
+					"if (jsonData.token) {",
+					"    pm.collectionVariables.set(\"token\", jsonData.token);",
+					"}"
+				  ],
+				  "type": "text/javascript"
+				}
+			  }
+			],
+			"request": {
+			  "method": "POST",
+			  "header": [
+				{
+				  "key": "Content-Type",
+				  "value": "application/json",
+				  "type": "text"
+				}
+			  ],
+			  "body": {
+				"mode": "raw",
+				"raw": "{\n    \"username\": \"testuser\",\n    \"password\": \"testpassword\"\n}"
+			  },
+			  "url": {
+				"raw": "{{base_url}}/users/login",
+				"host": ["{{base_url}}"],
+				"path": ["users", "login"]
+			  },
+			  "description": "Login with user credentials and obtain JWT token"
+			},
+			"response": []
+		  },
+		  {
+			"name": "Logout",
+			"request": {
+			  "method": "POST",
+			  "header": [
+				{
+				  "key": "Authorization",
+				  "value": "Bearer {{token}}",
+				  "type": "text"
+				}
+			  ],
+			  "url": {
+				"raw": "{{base_url}}/users/logout",
+				"host": ["{{base_url}}"],
+				"path": ["users", "logout"]
+			  },
+			  "description": "Logout current user session"
+			},
+			"response": []
+		  },
+		  {
+			"name": "Get User Profile",
+			"request": {
+			  "method": "GET",
+			  "header": [
+				{
+				  "key": "Authorization",
+				  "value": "Bearer {{token}}",
+				  "type": "text"
+				}
+			  ],
+			  "url": {
+				"raw": "{{base_url}}/users/profile",
+				"host": ["{{base_url}}"],
+				"path": ["users", "profile"]
+			  },
+			  "description": "Get the current user's profile information"
+			},
+			"response": []
+		  }
+		]
+	  },
+	  {
+		"name": "Card Search",
+		"description": "Search for Magic cards from Scryfall API",
+		"item": [
+		  {
+			"name": "Get Search Filters",
+			"request": {
+			  "method": "GET",
+			  "header": [],
+			  "url": {
+				"raw": "{{base_url}}/cards/search/filters",
+				"host": ["{{base_url}}"],
+				"path": ["cards", "search", "filters"]
+			  },
+			  "description": "Get available card types and sets for search filters"
+			},
+			"response": []
+		  },
+		  {
+			"name": "Search Cards",
+			"request": {
+			  "method": "GET",
+			  "header": [],
+			  "url": {
+				"raw": "{{base_url}}/cards/search?query=lightning&page=1",
+				"host": ["{{base_url}}"],
+				"path": ["cards", "search"],
+				"query": [
+				  {
+					"key": "query",
+					"value": "lightning"
+				  },
+				  {
+					"key": "page",
+					"value": "1"
+				  },
+				  {
+					"key": "type",
+					"value": "instant",
+					"disabled": true
+				  },
+				  {
+					"key": "set",
+					"value": "m20",
+					"disabled": true
+				  },
+				  {
+					"key": "color",
+					"value": "r",
+					"disabled": true
+				  },
+				  {
+					"key": "rarity",
+					"value": "rare",
+					"disabled": true
+				  },
+				  {
+					"key": "isLegendary",
+					"value": "true",
+					"disabled": true
+				  },
+				  {
+					"key": "isLand",
+					"value": "true",
+					"disabled": true
+				  }
+				]
+			  },
+			  "description": "Search for cards with various filters"
+			},
+			"response": []
+		  },
+		  {
+			"name": "Get Card By ID",
+			"request": {
+			  "method": "GET",
+			  "header": [],
+			  "url": {
+				"raw": "{{base_url}}/cards/cards/bb8c67a3-ed8c-426b-9e9d-38d2a450fe37",
+				"host": ["{{base_url}}"],
+				"path": ["cards", "cards", "bb8c67a3-ed8c-426b-9e9d-38d2a450fe37"]
+			  },
+			  "description": "Get details for a specific card by its ID"
+			},
+			"response": []
+		  }
+		]
+	  },
+	  {
+		"name": "Inventory Management",
+		"description": "Manage your personal card inventory",
+		"item": [
+		  {
+			"name": "Get Inventory",
+			"request": {
+			  "method": "GET",
+			  "header": [
+				{
+				  "key": "Authorization",
+				  "value": "Bearer {{token}}",
+				  "type": "text"
+				}
+			  ],
+			  "url": {
+				"raw": "{{base_url}}/inventory",
+				"host": ["{{base_url}}"],
+				"path": ["inventory"]
+			  },
+			  "description": "Get the user's card inventory"
+			},
+			"response": []
+		  },
+		  {
+			"name": "Get Sorted Inventory",
+			"request": {
+			  "method": "GET",
+			  "header": [
+				{
+				  "key": "Authorization",
+				  "value": "Bearer {{token}}",
+				  "type": "text"
+				}
+			  ],
+			  "url": {
+				"raw": "{{base_url}}/inventory/sorted?sortBy=name",
+				"host": ["{{base_url}}"],
+				"path": ["inventory", "sorted"],
+				"query": [
+				  {
+					"key": "sortBy",
+					"value": "name",
+					"description": "Sort by name or mana_cost"
+				  }
+				]
+			  },
+			  "description": "Get the user's inventory sorted by name or mana cost"
+			},
+			"response": []
+		  },
+		  {
+			"name": "Search Inventory",
+			"request": {
+			  "method": "GET",
+			  "header": [
+				{
+				  "key": "Authorization",
+				  "value": "Bearer {{token}}",
+				  "type": "text"
+				}
+			  ],
+			  "url": {
+				"raw": "{{base_url}}/inventory/search?query=lightning",
+				"host": ["{{base_url}}"],
+				"path": ["inventory", "search"],
+				"query": [
+				  {
+					"key": "query",
+					"value": "lightning"
+				  },
+				  {
+					"key": "color",
+					"value": "r",
+					"disabled": true
+				  },
+				  {
+					"key": "type",
+					"value": "instant",
+					"disabled": true
+				  },
+				  {
+					"key": "isLegendary",
+					"value": "true",
+					"disabled": true
+				  },
+				  {
+					"key": "isLand",
+					"value": "true",
+					"disabled": true
+				  }
+				]
+			  },
+			  "description": "Search for cards in the user's inventory"
+			},
+			"response": []
+		  },
+		  {
+			"name": "Add Card To Inventory",
+			"request": {
+			  "method": "POST",
+			  "header": [
+				{
+				  "key": "Authorization",
+				  "value": "Bearer {{token}}",
+				  "type": "text"
+				},
+				{
+				  "key": "Content-Type",
+				  "value": "application/json",
+				  "type": "text"
+				}
+			  ],
+			  "body": {
+				"mode": "raw",
+				"raw": "{\n    \"cardId\": \"bb8c67a3-ed8c-426b-9e9d-38d2a450fe37\"\n}"
+			  },
+			  "url": {
+				"raw": "{{base_url}}/cards/add_card_to_inventory",
+				"host": ["{{base_url}}"],
+				"path": ["cards", "add_card_to_inventory"]
+			  },
+			  "description": "Add a card to user's inventory"
+			},
+			"response": []
+		  },
+		  {
+			"name": "Update Card Quantity",
+			"request": {
+			  "method": "PUT",
+			  "header": [
+				{
+				  "key": "Authorization",
+				  "value": "Bearer {{token}}",
+				  "type": "text"
+				},
+				{
+				  "key": "Content-Type",
+				  "value": "application/json",
+				  "type": "text"
+				}
+			  ],
+			  "body": {
+				"mode": "raw",
+				"raw": "{\n    \"cardId\": \"bb8c67a3-ed8c-426b-9e9d-38d2a450fe37\",\n    \"quantity\": 3\n}"
+			  },
+			  "url": {
+				"raw": "{{base_url}}/inventory/update_quantity",
+				"host": ["{{base_url}}"],
+				"path": ["inventory", "update_quantity"]
+			  },
+			  "description": "Update the quantity of a card in the inventory"
+			},
+			"response": []
+		  },
+		  {
+			"name": "Remove Card From Inventory",
+			"request": {
+			  "method": "DELETE",
+			  "header": [
+				{
+				  "key": "Authorization",
+				  "value": "Bearer {{token}}",
+				  "type": "text"
+				},
+				{
+				  "key": "Content-Type",
+				  "value": "application/json",
+				  "type": "text"
+				}
+			  ],
+			  "body": {
+				"mode": "raw",
+				"raw": "{\n    \"cardId\": \"bb8c67a3-ed8c-426b-9e9d-38d2a450fe37\"\n}"
+			  },
+			  "url": {
+				"raw": "{{base_url}}/inventory/remove_card",
+				"host": ["{{base_url}}"],
+				"path": ["inventory", "remove_card"]
+			  },
+			  "description": "Remove a card from the user's inventory"
+			},
+			"response": []
+		  }
+		]
+	  },
+	  {
+		"name": "Deck Management",
+		"description": "Create and manage card decks",
+		"item": [
+		  {
+			"name": "Create Deck",
+			"request": {
+			  "method": "POST",
+			  "header": [
+				{
+				  "key": "Authorization",
+				  "value": "Bearer {{token}}",
+				  "type": "text"
+				},
+				{
+				  "key": "Content-Type",
+				  "value": "application/json",
+				  "type": "text"
+				}
+			  ],
+			  "body": {
+				"mode": "raw",
+				"raw": "{\n    \"name\": \"My First Deck\"\n}"
+			  },
+			  "url": {
+				"raw": "{{base_url}}/decks/create",
+				"host": ["{{base_url}}"],
+				"path": ["decks", "create"]
+			  },
+			  "description": "Create a new deck"
+			},
+			"response": []
+		  },
+		  {
+			"name": "View Deck",
+			"request": {
+			  "method": "GET",
+			  "header": [
+				{
+				  "key": "Authorization",
+				  "value": "Bearer {{token}}",
+				  "type": "text"
+				}
+			  ],
+			  "url": {
+				"raw": "{{base_url}}/decks/:deckId",
+				"host": ["{{base_url}}"],
+				"path": ["decks", ":deckId"],
+				"variable": [
+				  {
+					"key": "deckId",
+					"value": "1",
+					"description": "ID of the deck to view"
+				  }
+				]
+			  },
+			  "description": "View a specific deck and its cards"
+			},
+			"response": []
+		  },
+		  {
+			"name": "Add Card To Deck",
+			"request": {
+			  "method": "POST",
+			  "header": [
+				{
+				  "key": "Authorization",
+				  "value": "Bearer {{token}}",
+				  "type": "text"
+				},
+				{
+				  "key": "Content-Type",
+				  "value": "application/json",
+				  "type": "text"
+				}
+			  ],
+			  "body": {
+				"mode": "raw",
+				"raw": "{\n    \"cardId\": \"bb8c67a3-ed8c-426b-9e9d-38d2a450fe37\",\n    \"deckId\": 1\n}"
+			  },
+			  "url": {
+				"raw": "{{base_url}}/decks/add_card",
+				"host": ["{{base_url}}"],
+				"path": ["decks", "add_card"]
+			  },
+			  "description": "Add a card to a deck"
+			},
+			"response": []
+		  },
+		  {
+			"name": "Remove Card From Deck",
+			"request": {
+			  "method": "DELETE",
+			  "header": [
+				{
+				  "key": "Authorization",
+				  "value": "Bearer {{token}}",
+				  "type": "text"
+				},
+				{
+				  "key": "Content-Type",
+				  "value": "application/json",
+				  "type": "text"
+				}
+			  ],
+			  "body": {
+				"mode": "raw",
+				"raw": "{\n    \"cardId\": \"bb8c67a3-ed8c-426b-9e9d-38d2a450fe37\"\n}"
+			  },
+			  "url": {
+				"raw": "{{base_url}}/decks/:deckId/remove_card",
+				"host": ["{{base_url}}"],
+				"path": ["decks", ":deckId", "remove_card"],
+				"variable": [
+				  {
+					"key": "deckId",
+					"value": "1",
+					"description": "ID of the deck"
+				  }
+				]
+			  },
+			  "description": "Remove a card from a deck"
+			},
+			"response": []
+		  },
+		  {
+			"name": "Filter Deck Cards",
+			"request": {
+			  "method": "GET",
+			  "header": [
+				{
+				  "key": "Authorization",
+				  "value": "Bearer {{token}}",
+				  "type": "text"
+				}
+			  ],
+			  "url": {
+				"raw": "{{base_url}}/decks/:deckId/filter?color=r&type=instant",
+				"host": ["{{base_url}}"],
+				"path": ["decks", ":deckId", "filter"],
+				"query": [
+				  {
+					"key": "color",
+					"value": "r"
+				  },
+				  {
+					"key": "type",
+					"value": "instant"
+				  }
+				],
+				"variable": [
+				  {
+					"key": "deckId",
+					"value": "1",
+					"description": "ID of the deck"
+				  }
+				]
+			  },
+			  "description": "Filter cards in a deck by color and type"
+			},
+			"response": []
+		  },
+		  {
+			"name": "Search Deck",
+			"request": {
+			  "method": "GET",
+			  "header": [
+				{
+				  "key": "Authorization",
+				  "value": "Bearer {{token}}",
+				  "type": "text"
+				}
+			  ],
+			  "url": {
+				"raw": "{{base_url}}/decks/:deckId/search?query=lightning",
+				"host": ["{{base_url}}"],
+				"path": ["decks", ":deckId", "search"],
+				"query": [
+				  {
+					"key": "query",
+					"value": "lightning"
+				  },
+				  {
+					"key": "color",
+					"value": "r",
+					"disabled": true
+				  },
+				  {
+					"key": "type",
+					"value": "instant",
+					"disabled": true
+				  },
+				  {
+					"key": "isLegendary",
+					"value": "true",
+					"disabled": true
+				  },
+				  {
+					"key": "isLand",
+					"value": "true",
+					"disabled": true
+				  }
+				],
+				"variable": [
+				  {
+					"key": "deckId",
+					"value": "1",
+					"description": "ID of the deck"
+				  }
+				]
+			  },
+			  "description": "Search for cards in a specific deck"
+			},
+			"response": []
+		  },
+		  {
+			"name": "Verify Deck",
+			"request": {
+			  "method": "GET",
+			  "header": [
+				{
+				  "key": "Authorization",
+				  "value": "Bearer {{token}}",
+				  "type": "text"
+				}
+			  ],
+			  "url": {
+				"raw": "{{base_url}}/decks/:deckId/verify",
+				"host": ["{{base_url}}"],
+				"path": ["decks", ":deckId", "verify"],
+				"variable": [
+				  {
+					"key": "deckId",
+					"value": "1",
+					"description": "ID of the deck"
+				  }
+				]
+			  },
+			  "description": "Verify if a deck has the required number of cards"
+			},
+			"response": []
+		  },
+		  {
+			"name": "Delete Deck",
+			"request": {
+			  "method": "DELETE",
+			  "header": [
+				{
+				  "key": "Authorization",
+				  "value": "Bearer {{token}}",
+				  "type": "text"
+				},
+				{
+				  "key": "Content-Type",
+				  "value": "application/json",
+				  "type": "text"
+				}
+			  ],
+			  "body": {
+				"mode": "raw",
+				"raw": "{\n    \"deckId\": 1\n}"
+			  },
+			  "url": {
+				"raw": "{{base_url}}/decks/delete",
+				"host": ["{{base_url}}"],
+				"path": ["decks", "delete"]
+			  },
+			  "description": "Delete a deck"
+			},
+			"response": []
+		  },
+		  {
+			"name": "Upload Deck Picture",
+			"request": {
+			  "method": "POST",
+			  "header": [
+				{
+				  "key": "Authorization",
+				  "value": "Bearer {{token}}",
+				  "type": "text"
+				}
+			  ],
+			  "body": {
+				"mode": "formdata",
+				"formdata": [
+				  {
+					"key": "deckPicture",
+					"type": "file",
+					"src": "/path/to/your/picture.jpg"
+				  }
+				]
+			  },
+			  "url": {
+				"raw": "{{base_url}}/decks/:deckId/upload_picture",
+				"host": ["{{base_url}}"],
+				"path": ["decks", ":deckId", "upload_picture"],
+				"variable": [
+				  {
+					"key": "deckId",
+					"value": "1",
+					"description": "ID of the deck"
+				  }
+				]
+			  },
+			  "description": "Upload a picture for a deck"
+			},
+			"response": []
+		  },
+		  {
+			"name": "Remove Deck Picture",
+			"request": {
+			  "method": "DELETE",
+			  "header": [
+				{
+				  "key": "Authorization",
+				  "value": "Bearer {{token}}",
+				  "type": "text"
+				}
+			  ],
+			  "url": {
+				"raw": "{{base_url}}/decks/:deckId/remove_picture",
+				"host": ["{{base_url}}"],
+				"path": ["decks", ":deckId", "remove_picture"],
+				"variable": [
+				  {
+					"key": "deckId",
+					"value": "1",
+					"description": "ID of the deck"
+				  }
+				]
+			  },
+			  "description": "Remove the picture from a deck"
+			},
+			"response": []
+		  }
+		]
+	  }
+	]
+  }
