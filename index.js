@@ -11,12 +11,10 @@ require('dotenv').config();
 const app = express();
 
 // Middleware
-app.use(
-  cors({
-    origin: true,
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
@@ -44,23 +42,33 @@ const startServer = async () => {
   try {
     // Test database connection
     const isConnected = await testConnection();
-
+    
     if (isConnected) {
       // Initialize database tables
       await initDatabase();
-
+      
       // Start server
-      app.listen(PORT, () => {
+      const server = app.listen(PORT, () => {
         console.log(`Magic Inventory API server running on port ${PORT}`);
         console.log(`API base URL: http://localhost:${PORT}/api`);
       });
+      
+      return server;
     } else {
       console.error('Failed to start server due to database connection issues');
       console.error('Please check your database configuration in .env file');
+      process.exit(1);
     }
   } catch (error) {
     console.error('Server initialization error:', error);
+    process.exit(1);
   }
 };
 
-startServer();
+// If this file is being run directly, start the server
+if (require.main === module) {
+  startServer();
+}
+
+// Export app for testing
+module.exports = app;
