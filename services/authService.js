@@ -69,6 +69,22 @@ class AuthService {
       return { valid: false, error: 'Invalid token' };
     }
   }
+  
+  async refreshToken(refreshToken) {
+    try {
+        // Verify the refresh token (you might use jwt.verify here)
+        const decoded = jwt.verify(refreshToken, JWT_REFRESH_SECRET); // Use a separate secret for refresh tokens
+        // Optionally, check that the refresh token exists in your database
+        const newAccessToken = jwt.sign(
+            { id: decoded.id, username: decoded.username },
+            JWT_SECRET,
+            { expiresIn: JWT_EXPIRY }
+        );
+        return { success: true, token: newAccessToken };
+    } catch (error) {
+        return { success: false, error: 'Invalid refresh token' };
+    }
+}
 }
 
 module.exports = new AuthService();
