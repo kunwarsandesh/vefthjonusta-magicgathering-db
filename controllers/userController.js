@@ -146,6 +146,19 @@ const getProfile = async (req, res) => {
   }
 };
 
+const refresh = async (req, res) => {
+  const { refreshToken } = req.body;
+  if (!refreshToken) {
+      return res.status(400).json({ error: 'Refresh token is required' });
+  }
+  const result = await authService.refreshToken(refreshToken);
+  if (result.success) {
+      return res.json({ token: result.token });
+  } else {
+      return res.status(401).json({ error: result.error });
+  }
+};
+
 module.exports = {
   register,
   login,
@@ -153,4 +166,5 @@ module.exports = {
   updatePhoto,
   removePhoto,
   getProfile,
+  refresh,
 };
