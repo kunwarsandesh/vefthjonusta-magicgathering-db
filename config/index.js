@@ -30,6 +30,7 @@ if (process.env.DATABASE_URL) {
 module.exports = {
   PORT: process.env.PORT || 8080,
   JWT_SECRET: process.env.JWT_SECRET || 'magic-inventory-secret-key',
+  JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET || 'magic-inventory-refresh-secret-key', // Add this line
   JWT_EXPIRY: '24h',
   DB: dbConfig
 };
