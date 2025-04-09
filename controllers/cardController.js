@@ -4,7 +4,11 @@ const { pool } = require('../models/db');
 const cardRepository = require('../repositories/cardRepository');
 const inventoryRepository = require('../repositories/inventoryRepository');
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+const wishlistRepository = require('../repositories/wishlistRepository');
+>>>>>>> parent of efca855 (testteststestset)
 
 =======
 const wishlistRepository = require('../repositories/wishlistRepository');
