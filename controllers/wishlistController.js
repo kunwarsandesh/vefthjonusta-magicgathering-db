@@ -39,33 +39,6 @@ const getWishlist = async (req, res) => {
     }
   };
   
-
-// Add a card to wishlist
-const addCardToWishlist = async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const { cardId } = req.body;
-    if (!cardId) {
-      return res.status(400).json({ error: 'Card ID is required' });
-    }
-
-    const result = await wishlistService.addCard(userId, cardId);
-
-    if (result.alreadyExists) {
-      return res.status(400).json({ error: 'Card already exists in wishlist' });
-    }
-    
-    return res.json({
-      message: 'Card added to wishlist successfully',
-      cardId: result.cardId,
-      id: result.id,
-    });
-  } catch (error) {
-    console.error('Error adding card to wishlist:', error.message);
-    return res.status(500).json({ error: 'Error adding card to wishlist' });
-  }
-};
-
 // Remove a card from wishlist
 const removeCardFromWishlist = async (req, res) => {
   try {
@@ -85,6 +58,5 @@ const removeCardFromWishlist = async (req, res) => {
 
 module.exports = {
   getWishlist,
-  addCardToWishlist,
   removeCardFromWishlist,
 };
