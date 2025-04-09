@@ -18,6 +18,5 @@ router.get('/cards/:cardId', getCardById);
 
 // Protected routes
 router.post('/add_card_to_inventory', authenticate, addCardToInventory);
-router.post('/wishlist/add_card', authenticate, addCardToWishlist);
 
 module.exports = router;
