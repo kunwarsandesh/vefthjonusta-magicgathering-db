@@ -114,6 +114,19 @@ const initDatabase = async () => {
       )
     `);
 
+    // Create wishlist table if not exists
+    await pool.execute(`
+      CREATE TABLE IF NOT EXISTS wishlist (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        card_id VARCHAR(255) NOT NULL,
+        added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+        FOREIGN KEY (card_id) REFERENCES cards(id) ON DELETE CASCADE,
+        UNIQUE KEY unique_wishlist (user_id, card_id)
+      )
+    `);
+
     // Create deck_cards table if not exists
     await pool.execute(`
       CREATE TABLE IF NOT EXISTS deck_cards (

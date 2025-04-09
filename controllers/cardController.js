@@ -4,6 +4,8 @@ const { pool } = require('../models/db');
 const cardRepository = require('../repositories/cardRepository');
 const inventoryRepository = require('../repositories/inventoryRepository');
 
+
+
 // Cache for storing search results
 const searchCache = new NodeCache({ stdTTL: 600 }); // 10 minutes TTL
 const CARDS_PER_PAGE = 12;
@@ -285,6 +287,7 @@ const addCardToInventory = async (req, res) => {
     return res.status(500).json({ error: 'Error adding card to inventory' });
   }
 };
+
 
 module.exports = {
   getSearchFilters,
