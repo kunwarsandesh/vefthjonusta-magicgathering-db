@@ -1,5 +1,5 @@
 const express = require('express');
-const { addCardToWishlist } = require('../controllers/cardController'); 
+const { addCardToWishlist } = require('../controllers/cardController'); // Ensure this import is correct
 const { getWishlist, removeCardFromWishlist } = require('../controllers/wishlistController');
 const { authenticate } = require('../middleware/auth');
 

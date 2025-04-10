@@ -15,7 +15,7 @@ const findByUserId = async (userId) => {
 };
 
 // Add card to wishlist
-const addCard = async (userId, cardId) => {
+const addCard = async (userId, cardId, cardName, setName) => {
   // Check if the card already exists in the wishlist
   const [existingRows] = await pool.execute(
     'SELECT * FROM wishlist WHERE user_id = ? AND card_id = ?',
@@ -26,8 +26,8 @@ const addCard = async (userId, cardId) => {
     return { alreadyExists: true, record: existingRows[0] };
   } else {
     const [result] = await pool.execute(
-      'INSERT INTO wishlist (user_id, card_id) VALUES (?, ?)',
-      [userId, cardId]
+      'INSERT INTO wishlist (user_id, card_id, card_name, set_name) VALUES (?, ?, ?, ?)',
+      [userId, cardId, cardName, setName]
     );
     return { id: result.insertId, cardId };
   }
