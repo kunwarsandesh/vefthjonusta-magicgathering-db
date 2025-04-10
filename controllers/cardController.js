@@ -287,10 +287,60 @@ const addCardToInventory = async (req, res) => {
   }
 };
 
+const addCardToWishlist = async (req, res) => {
+  try {
+    const { cardId } = req.body;
+    const userId = req.user.id;
+
+    if (!cardId) {
+      return res.status(400).json({ error: 'Card ID is required' });
+    }
+
+    // Verify that the user exists
+    const user = await userRepository.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Check if the card exists in our database
+    let card = await cardRepository.findById(cardId);
+
+    // If card doesn't exist, fetch it from Scryfall API
+    if (!card) {
+      try {
+        await delay(REQUEST_DELAY_MS); // if you use a delay between API calls
+        const response = await axios.get(https://api.scryfall.com/cards/${cardId});
+        card = createCardFromResponseData(response.data);
+        // Save card to database
+        await cardRepository.save(card);
+      } catch (error) {
+        return res.status(404).json({ error: 'Card not found' });
+      }
+    }
+
+    // Add card to user's wishlist using the wishlist repository
+    const result = await wishlistRepository.addCard(userId, cardId);
+
+    if (result.alreadyExists) {
+      return res.status(400).json({ error: 'Card already exists in wishlist' });
+    }
+
+    return res.status(201).json({
+      message: 'Card added to wishlist successfully',
+      card,
+      wishlistRecord: result, // Contains details like the new wishlist record id
+    });
+  } catch (error) {
+    console.error('Error adding card to wishlist:', error.message);
+    return res.status(500).json({ error: 'Error adding card to wishlist' });
+  }
+};
+
 module.exports = {
   getSearchFilters,
   searchCards,
   getPaginatedResults,
   getCardById,
   addCardToInventory,
+  addCardToWishlist,
 };
