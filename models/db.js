@@ -123,7 +123,7 @@ const initDatabase = async () => {
         added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
         FOREIGN KEY (card_id) REFERENCES cards(id) ON DELETE CASCADE,
-        UNIQUE KEY unique_wishlist (user_id, card_id)
+        UNIQUE KEY unique_user_card (user_id, card_id)
       )
     `);
 
