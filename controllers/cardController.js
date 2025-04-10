@@ -300,7 +300,6 @@ const addCardToWishlist = async (req, res) => {
     }
 
     // Check if user exists
-    const userRepository = require('../repositories/userRepository');
     const user = await userRepository.findById(userId);
 
     if (!user) {
@@ -313,7 +312,7 @@ const addCardToWishlist = async (req, res) => {
     // If card doesn't exist, fetch it from Scryfall API
     if (!card) {
       try {
-        await delay(REQUEST_DELAY_MS); // if you use a delay between API calls
+        await delay(REQUEST_DELAY_MS);
         const response = await axios.get(`https://api.scryfall.com/cards/${cardId}`);
         card = createCardFromResponseData(response.data);
         // Save card to database
@@ -324,7 +323,7 @@ const addCardToWishlist = async (req, res) => {
     }
 
     // Add card to user's wishlist using the wishlist repository
-    const result = await wishlistRepository.addCard(userId, cardId);
+    const result = await wishlistRepository.addCard(userId, cardId, card.name, card.set_name);
 
     if (result.alreadyExists) {
       return res.status(400).json({ error: 'Card already exists in wishlist' });
