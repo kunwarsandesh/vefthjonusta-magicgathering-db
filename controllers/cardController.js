@@ -4,6 +4,8 @@ const { pool } = require('../models/db');
 const cardRepository = require('../repositories/cardRepository');
 const inventoryRepository = require('../repositories/inventoryRepository');
 const wishlistRepository = require('../repositories/wishlistRepository');
+const userRepository = require('../repositories/userRepository');
+
 
 // Cache for storing search results
 const searchCache = new NodeCache({ stdTTL: 600 }); // 10 minutes TTL
