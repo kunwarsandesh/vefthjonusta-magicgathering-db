@@ -4,7 +4,8 @@ const {
   searchCards, 
   getPaginatedResults, 
   getCardById, 
-  addCardToInventory 
+  addCardToInventory, 
+  addCardToWishlist // Importing the missing function
 } = require('../controllers/cardController');
 const { authenticate } = require('../middleware/auth');
 
@@ -18,5 +19,6 @@ router.get('/cards/:cardId', getCardById);
 
 // Protected routes
 router.post('/add_card_to_inventory', authenticate, addCardToInventory);
+router.post('/add_card_to_wishlist', authenticate, addCardToWishlist); // Adding the missing route
 
 module.exports = router;
