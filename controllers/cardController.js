@@ -299,8 +299,10 @@ const addCardToWishlist = async (req, res) => {
       return res.status(400).json({ error: 'Card ID is required' });
     }
 
-    // Verify that the user exists
+    // Check if user exists
+    const userRepository = require('../repositories/userRepository');
     const user = await userRepository.findById(userId);
+
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
