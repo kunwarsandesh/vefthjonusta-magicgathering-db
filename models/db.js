@@ -120,10 +120,14 @@ const initDatabase = async () => {
         id INT AUTO_INCREMENT PRIMARY KEY,
         user_id INT NOT NULL,
         card_id VARCHAR(255) NOT NULL,
+        card_name VARCHAR(255) NOT NULL,
+        set_name VARCHAR(255),
+        price DECIMAL(10, 2),
+        quantity INT DEFAULT 1,
+        \`condition\` VARCHAR(50) DEFAULT 'Near Mint',
         added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-        FOREIGN KEY (card_id) REFERENCES cards(id) ON DELETE CASCADE,
-        UNIQUE KEY unique_user_card (user_id, card_id)
+        FOREIGN KEY (card_id) REFERENCES cards(id) ON DELETE CASCADE
       )
     `);
 
