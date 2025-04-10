@@ -287,6 +287,7 @@ const addCardToInventory = async (req, res) => {
   }
 };
 
+// Add card to user's wishlist
 const addCardToWishlist = async (req, res) => {
   try {
     const { cardId } = req.body;
@@ -309,7 +310,7 @@ const addCardToWishlist = async (req, res) => {
     if (!card) {
       try {
         await delay(REQUEST_DELAY_MS); // if you use a delay between API calls
-        const response = await axios.get(https://api.scryfall.com/cards/${cardId});
+        const response = await axios.get(`https://api.scryfall.com/cards/${cardId}`);
         card = createCardFromResponseData(response.data);
         // Save card to database
         await cardRepository.save(card);
