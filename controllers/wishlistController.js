@@ -39,6 +39,7 @@ const getWishlist = async (req, res) => {
     }
   };
   
+
 // Remove a card from wishlist
 const removeCardFromWishlist = async (req, res) => {
   try {

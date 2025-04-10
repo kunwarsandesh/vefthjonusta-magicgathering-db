@@ -1,13 +1,13 @@
-// wishlistRoutes.js
 const express = require('express');
-const { getWishlist, addCardToWishlist, removeCardFromWishlist } = require('../controllers/wishlistController');
+const { addCardToWishlist } = require('../controllers/cardController'); // <-- Changed
+const { getWishlist, removeCardFromWishlist } = require('../controllers/wishlistController');
 const { authenticate } = require('../middleware/auth');
 
 const router = express.Router();
 
-// Protected routes for wishlist
 router.get('/', authenticate, getWishlist);
-router.post('/add_card', authenticate, addCardToWishlist);
+router.post('/add_card', authenticate, addCardToWishlist); // <-- Uses cardController now
 router.delete('/remove_card', authenticate, removeCardFromWishlist);
 
 module.exports = router;
+

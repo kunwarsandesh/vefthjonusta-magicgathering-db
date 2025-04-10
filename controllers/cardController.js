@@ -3,16 +3,7 @@ const NodeCache = require('node-cache');
 const { pool } = require('../models/db');
 const cardRepository = require('../repositories/cardRepository');
 const inventoryRepository = require('../repositories/inventoryRepository');
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-=======
 const wishlistRepository = require('../repositories/wishlistRepository');
->>>>>>> parent of efca855 (testteststestset)
-
-=======
-const wishlistRepository = require('../repositories/wishlistRepository');
->>>>>>> parent of efca855 (testteststestset)
 
 // Cache for storing search results
 const searchCache = new NodeCache({ stdTTL: 600 }); // 10 minutes TTL
@@ -295,7 +286,6 @@ const addCardToInventory = async (req, res) => {
     return res.status(500).json({ error: 'Error adding card to inventory' });
   }
 };
-
 
 module.exports = {
   getSearchFilters,
